@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="Assets/logo/logo.svg" width=350pt/>
+  <img src="Assets/logo/logo.svg" height=150pt/>
   <br>
   <br>
   <div>
@@ -10,10 +10,12 @@
       <a href="https://github.com/ptrkstr/Slab/actions/workflows/swift.yml"><img src="https://github.com/ptrkstr/Slab/actions/workflows/swift.yml/badge.svg"/></a>
       <a href="https://codecov.io/gh/ptrkstr/Slab"><img src="https://codecov.io/gh/ptrkstr/Slab/branch/develop/graph/badge.svg?token=qkzTPnJEc9"/></a>
   </div>
+    <br>
   <p>
     Swift package to convert a HTML table into an array of dictionaries.
   </p>
 </div>
+
 
 ## Example
 
@@ -77,7 +79,7 @@ THEN I see an array of dictionaries
         </tr>
     </tbody>
 </table>
- 
+
 ```swift
 [
     ["A": "1", "B": "1"],
