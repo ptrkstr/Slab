@@ -116,6 +116,38 @@ THEN I see an array of dictionaries
 ]
 ```
 
+### Linebreak Support
+<table>
+    <tbody>
+        <tr>
+            <th>A<br>A
+            </th>
+            <th>B
+            </th>
+        </tr>
+        <tr>
+            <td>1
+            </td>
+            <td>2
+            </td>
+        </tr>
+        <tr>
+	    <td>3<br>3
+            </td>
+            <td>4
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+```swift
+[
+    ["A\nA": "1", "B": "2"],
+    ["A\nA": "3\n3", "B": "2"]
+]
+```
+
 ## Notes
 
 - Empty `<td></td>` is converted into an empty `String`
