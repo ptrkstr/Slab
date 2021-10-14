@@ -2,6 +2,31 @@ import SwiftSoup
 import Collections
 import Foundation
 
+extension Element {
+    
+    // https://github.com/scinfu/SwiftSoup/issues/156#issuecomment-943009494
+    func text(isLineBreakParsed: Bool) throws -> String {
+        guard isLineBreakParsed else {
+            return try text()
+        }
+        
+        let doc: Document = try SwiftSoup.parse(html())
+        //set pretty print to false, so \n is not removed
+        doc.outputSettings(OutputSettings().prettyPrint(pretty: false))
+        
+        //select all <br> tags and append \n after that
+        try doc.select("br").after("\n")
+        
+        //select all <p> tags and prepend \n before that
+        //try doc.select("p").before("\\n") // uncomment if needed
+        
+        //get the HTML from the document, and retaining original new lines
+        let str = try doc.html()
+        
+        return try SwiftSoup.clean(str, "", Whitelist.none(), OutputSettings().prettyPrint(pretty: false))!
+    }
+}
+
 public struct Slab {
     
     public init() {}
@@ -63,7 +88,7 @@ public struct Slab {
                     for j in (0..<rowSpan) {
                         let row = rowIndex + j
                         let col = colIndex + offset + i
-                        orderedDictionary[row]![col] = try td.text()
+                        try orderedDictionary[row]![col] = td.text(isLineBreakParsed: true)
                     }
                 }
             }
@@ -82,7 +107,7 @@ public struct Slab {
             row.sort()
             
             for element in row {
-                let header = try headers[element.key].text()
+                let header = try headers[element.key].text(isLineBreakParsed: true)
                 rowDictionary[header] = element.value
             }
             
@@ -104,7 +129,7 @@ public struct Slab {
                 throw SlabError.tableBodyExpectedOnlyTableHeaderForFirstRow
             }
             
-            let text = try element.text()
+            let text = try element.text(isLineBreakParsed: true)
             
             guard uniqueTableHeaders.contains(text) == false else {
                 throw SlabError.tableHeadersNotUnique

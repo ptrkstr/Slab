@@ -182,6 +182,78 @@ final class SlabTests: XCTestCase {
 			]
 		)
 	}
+    
+    func test_linebreaks_header() throws {
+    
+        XCTAssertEqual(
+            try slab.convert(
+"""
+<table>
+    <tbody>
+        <tr>
+            <th>A<br>A
+            </th>
+            <th>B
+            </th>
+        </tr>
+        <tr>
+            <td>1
+            </td>
+            <td>2
+            </td>
+        </tr>
+        <tr>
+            <td>3
+            </td>
+            <td>4
+            </td>
+        </tr>
+    </tbody>
+</table>
+"""
+            ),
+            [
+                ["A\nA": "1", "B": "2"],
+                ["A\nA": "3", "B": "4"]
+            ]
+        )
+    }
+    
+    func test_linebreaks_rows() throws {
+    
+        XCTAssertEqual(
+            try slab.convert(
+"""
+<table>
+    <tbody>
+        <tr>
+            <th>A
+            </th>
+            <th>B
+            </th>
+        </tr>
+        <tr>
+            <td>1<br>1
+            </td>
+            <td>2
+            </td>
+        </tr>
+        <tr>
+            <td>3
+            </td>
+            <td>4
+            </td>
+        </tr>
+    </tbody>
+</table>
+"""
+            ),
+            [
+                ["A": "1\n1", "B": "2"],
+                ["A": "3", "B": "4"]
+            ]
+        )
+    }
 	
     func test_rowspan_1() throws {
 		
