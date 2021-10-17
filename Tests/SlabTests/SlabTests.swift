@@ -395,4 +395,37 @@ final class SlabTests: XCTestCase {
             ]
         )
     }
+    
+    func test_modification() throws {
+        
+        XCTAssertEqual(
+            try slab.convert(
+"""
+<table>
+    <tbody>
+        <tr>
+            <th>A<sup>[1]</sup>
+            </th>
+            <th>B
+            </th>
+        </tr>
+        <tr>
+            <td>1
+            </td>
+            <td>2<sup>[2]</sup>
+            </td>
+        </tr>
+    </tbody>
+</table>
+""",
+configuration: .init(modify: { element, row, column in
+    try element.select("sup").remove()
+    return element
+})
+            ),
+            [
+                ["A": "1", "B": "2"]
+            ]
+        )
+    }
 }

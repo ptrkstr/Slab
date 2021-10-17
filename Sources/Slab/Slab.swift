@@ -2,6 +2,8 @@ import SwiftSoup
 import Collections
 import Foundation
 
+// TODO: Minimise repetition of Configuration in header and row
+
 extension Element {
     
     // https://github.com/scinfu/SwiftSoup/issues/156#issuecomment-943009494
@@ -33,7 +35,7 @@ public struct Slab {
     
     /// Converts the first `<tbody>` element.
     /// Throws `SlabError`s or `SwiftSoup` errors.
-    public func convert(_ html: String) throws -> [[String: String]] {
+    public func convert(_ html: String, configuration: Configuration = .default) throws -> [[String: String]] {
         
         let document: Document = try SwiftSoup.parse(html)
         
@@ -49,7 +51,7 @@ public struct Slab {
         
         let headers = rows.removeFirst().children().array()
         
-        try validateTableHeaders(headers)
+        try validateTableHeaders(headers, configuration: configuration)
         
         var orderedDictionary = OrderedDictionary<Int, OrderedDictionary<Int, String>>()
         
@@ -88,7 +90,8 @@ public struct Slab {
                     for j in (0..<rowSpan) {
                         let row = rowIndex + j
                         let col = colIndex + offset + i
-                        try orderedDictionary[row]![col] = td.text(isLineBreakParsed: true)
+                        let modification = try configuration.modify?(td, row, col) ?? td
+                        try orderedDictionary[row]![col] = modification.text(isLineBreakParsed: true)
                     }
                 }
             }
@@ -120,16 +123,17 @@ public struct Slab {
     /// Ensures that all `tableHeaders`:
     /// - Are `th` tags
     /// - Appear only once
-    private func validateTableHeaders(_ tableHeaders: [Element]) throws {
+    private func validateTableHeaders(_ tableHeaders: [Element], configuration: Configuration) throws {
         var uniqueTableHeaders = [String]()
         
-        try tableHeaders.forEach { element in
+        try tableHeaders.enumerated().forEach { (offset, element) in
             
             guard element.tagName() == "th" else {
                 throw SlabError.tableBodyExpectedOnlyTableHeaderForFirstRow
             }
             
-            let text = try element.text(isLineBreakParsed: true)
+            let modification = try configuration.modify?(element, 0, offset) ?? element
+            let text = try modification.text(isLineBreakParsed: true)
             
             guard uniqueTableHeaders.contains(text) == false else {
                 throw SlabError.tableHeadersNotUnique

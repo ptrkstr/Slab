@@ -148,6 +148,33 @@ THEN I see an array of dictionaries
 ]
 ```
 
+### Modification
+
+Prior to row data being entered, you have the opportunity to modify the `SwiftSoup.Element`.
+
+<table>
+    <tbody>
+        <tr>
+            <th>A<sup>[1]</sup>
+            </th>
+            <th>B
+            </th>
+        </tr>
+        <tr>
+            <td>1
+            </td>
+            <td>2<sup>[2]</sup>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+```swift
+[
+    ["A": "1", "B": "2"]
+]
+```
+
 ## Notes
 
 - Empty `<td></td>` is converted into an empty `String`
