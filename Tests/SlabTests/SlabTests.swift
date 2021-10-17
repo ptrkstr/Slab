@@ -213,8 +213,8 @@ final class SlabTests: XCTestCase {
 """
             ),
             [
-                ["A\nA": "1", "B": "2"],
-                ["A\nA": "3", "B": "4"]
+                ["A\\nA": "1", "B": "2"],
+                ["A\\nA": "3", "B": "4"]
             ]
         )
     }
@@ -249,7 +249,7 @@ final class SlabTests: XCTestCase {
 """
             ),
             [
-                ["A": "1\n1", "B": "2"],
+                ["A": "1\\n1", "B": "2"],
                 ["A": "3", "B": "4"]
             ]
         )

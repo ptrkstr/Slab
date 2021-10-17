@@ -15,13 +15,13 @@ extension Element {
         doc.outputSettings(OutputSettings().prettyPrint(pretty: false))
         
         //select all <br> tags and append \n after that
-        try doc.select("br").after("\n")
+        try doc.select("br").after("\\n")
         
         //select all <p> tags and prepend \n before that
         //try doc.select("p").before("\\n") // uncomment if needed
         
         //get the HTML from the document, and retaining original new lines
-        let str = try doc.html()
+        let str = try doc.html().replacingOccurrences(of: "\\\\n", with: "\n")
         
         return try SwiftSoup.clean(str, "", Whitelist.none(), OutputSettings().prettyPrint(pretty: false))!
     }
