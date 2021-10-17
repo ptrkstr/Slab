@@ -132,7 +132,7 @@ THEN I see an array of dictionaries
             </td>
         </tr>
         <tr>
-	    <td>3<br>3
+            <td>3<br>3
             </td>
             <td>4
             </td>
@@ -143,8 +143,8 @@ THEN I see an array of dictionaries
 
 ```swift
 [
-    ["A\nA": "1", "B": "2"],
-    ["A\nA": "3\n3", "B": "2"]
+    ["A\\nA": "1", "B": "2"],
+    ["A\\nA": "3\\n3", "B": "2"]
 ]
 ```
 
