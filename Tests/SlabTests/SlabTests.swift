@@ -19,6 +19,7 @@ final class SlabTests: XCTestCase {
 			"",
 			{ error in
 				XCTAssertEqual(error as! SlabError, .tableBodyNotFound)
+                XCTAssertEqual("<body> wasn\'t found.", error.localizedDescription)
 			}
 		)
 	}
@@ -35,6 +36,7 @@ final class SlabTests: XCTestCase {
 			"",
 			{ error in
 				XCTAssertEqual(error as! SlabError, .tableBodyContainsNoRows)
+                XCTAssertEqual("<tr> wasn't found within <body>.", error.localizedDescription)
 			}
 		)
 	}
@@ -55,6 +57,7 @@ final class SlabTests: XCTestCase {
 			"",
 			{ error in
 				XCTAssertEqual(error as! SlabError, .tableBodyExpectedOnlyTableHeaderForFirstRow)
+                XCTAssertEqual("First row contained something other than <th>.", error.localizedDescription)
 			}
 		)
 	}
@@ -77,6 +80,7 @@ final class SlabTests: XCTestCase {
 			"",
 			{ error in
 				XCTAssertEqual(error as! SlabError, .tableHeadersNotUnique)
+                XCTAssertEqual("<th> values aren't unique.", error.localizedDescription)
 			}
 		)
 	}
@@ -110,6 +114,7 @@ final class SlabTests: XCTestCase {
 			"",
 			{ error in
 				XCTAssertEqual(error as! SlabError, .tableDataRowspanNotInteger(tr: 0, td: 0, rowspan: "a"))
+                XCTAssertEqual("Expected rolspan at (tr: 0, td: 0) to be an integer. Instead found 'a'.", error.localizedDescription)
 			}
 		)
 	}
@@ -143,6 +148,7 @@ final class SlabTests: XCTestCase {
 			"",
 			{ error in
 				XCTAssertEqual(error as! SlabError, .tableDataColspanNotInteger(tr: 0, td: 0, colspan: "a"))
+                XCTAssertEqual("Expected colspan at (tr: 0, td: 0) to be an integer. Instead found 'a'.", error.localizedDescription)
 			}
 		)
 	}
@@ -175,6 +181,7 @@ final class SlabTests: XCTestCase {
             "",
             { error in
                 XCTAssertEqual(error as! SlabError, .tableDataMissing(tr: 2, td: 1))
+                XCTAssertEqual("No <td> found for (tr: 2, td: 1).", error.localizedDescription)
             }
         )
     }
