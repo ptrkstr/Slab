@@ -146,6 +146,38 @@ final class SlabTests: XCTestCase {
 			}
 		)
 	}
+    
+    func test_error_missingTableData() {
+        XCTAssertThrowsError(
+            try slab.convert(
+"""
+<table>
+    <tbody>
+        <tr>
+            <th>A
+            </th>
+            <th>B
+            </th>
+        </tr>
+        <tr>
+            <td>1
+            </td>
+            <td rowspan="3">2
+            </td>
+        </tr>
+        <tr>
+            <td>4
+            </td>
+        </tr>
+    </tbody>
+</table>
+"""),
+            "",
+            { error in
+                XCTAssertEqual(error as! SlabError, .tableDataMissing(tr: 2, td: 1))
+            }
+        )
+    }
 	
 	func test_simple() throws {
 

@@ -91,6 +91,9 @@ public struct Slab {
                         let row = rowIndex + j
                         let col = colIndex + offset + i
                         let modification = try configuration.modify?(td, row, col) ?? td
+                        guard orderedDictionary[row] != nil else {
+                            throw SlabError.tableDataMissing(tr: row, td: col)
+                        }
                         try orderedDictionary[row]![col] = modification.text(isLineBreakParsed: true)
                     }
                 }
