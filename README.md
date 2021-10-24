@@ -170,6 +170,13 @@ Prior to row data being entered, you have the opportunity to modify the `SwiftSo
 </table>
 
 ```swift
+Configuration(modify: { element, row, column in
+    try element.select("sup").remove()
+    return element
+})
+```
+
+```swift
 [
     ["A": "1", "B": "2"]
 ]
