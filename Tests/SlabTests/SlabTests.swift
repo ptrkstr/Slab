@@ -7,151 +7,151 @@ import Collections
 final class SlabTests: XCTestCase {
     
     let slab = Slab()
-	
-	func test_error_tableBodyNotFound() throws {
-		
-		XCTAssertThrowsError(
-			try slab.convert(
+    
+    func test_error_tableBodyNotFound() throws {
+        
+        XCTAssertThrowsError(
+            try slab.convert(
 """
 <table>
 </table>
 """),
-			"",
-			{ error in
-				XCTAssertEqual(error as! SlabError, .tableBodyNotFound)
+            "",
+            { error in
+                XCTAssertEqual(error as! SlabError, .tableBodyNotFound)
                 XCTAssertEqual("<body> wasn\'t found.", error.localizedDescription)
-			}
-		)
-	}
-	
-	func test_error_tableBodyContainsNoRows() throws {
-
-		XCTAssertThrowsError(
-			try slab.convert(
+            }
+        )
+    }
+    
+    func test_error_tableBodyContainsNoRows() throws {
+        
+        XCTAssertThrowsError(
+            try slab.convert(
 """
 <table>
-	<tbody></tbody>
+ <tbody></tbody>
 </table>
 """),
-			"",
-			{ error in
-				XCTAssertEqual(error as! SlabError, .tableBodyContainsNoRows)
+            "",
+            { error in
+                XCTAssertEqual(error as! SlabError, .tableBodyContainsNoRows)
                 XCTAssertEqual("<tr> wasn't found within <body>.", error.localizedDescription)
-			}
-		)
-	}
-	
-	func test_error_tableBodyExpectedOnlyTableHeaderForFirstRow() throws {
-		
-		XCTAssertThrowsError(
-			try slab.convert(
+            }
+        )
+    }
+    
+    func test_error_tableBodyExpectedOnlyTableHeaderForFirstRow() throws {
+        
+        XCTAssertThrowsError(
+            try slab.convert(
 """
 <table>
-	<tbody>
-		<tr>
-			<td></td>
-		</tr>
-	</tbody>
+ <tbody>
+  <tr>
+   <td></td>
+  </tr>
+ </tbody>
 </table>
 """),
-			"",
-			{ error in
-				XCTAssertEqual(error as! SlabError, .tableBodyExpectedOnlyTableHeaderForFirstRow)
+            "",
+            { error in
+                XCTAssertEqual(error as! SlabError, .tableBodyExpectedOnlyTableHeaderForFirstRow)
                 XCTAssertEqual("First row contained something other than <th>.", error.localizedDescription)
-			}
-		)
-	}
-	
-	func test_error_tableHeadersNotUnique() throws {
-		
-		XCTAssertThrowsError(
-			try slab.convert(
+            }
+        )
+    }
+    
+    func test_error_tableHeadersNotUnique() throws {
+        
+        XCTAssertThrowsError(
+            try slab.convert(
 """
 <table>
-	<tbody>
-		<tr>
-			<th>A</th>
-			<th>A</th>
-		</tr>
-	</tbody>
+ <tbody>
+  <tr>
+   <th>A</th>
+   <th>A</th>
+  </tr>
+ </tbody>
 </table>
 """
-			),
-			"",
-			{ error in
-				XCTAssertEqual(error as! SlabError, .tableHeadersNotUnique)
+            ),
+            "",
+            { error in
+                XCTAssertEqual(error as! SlabError, .tableHeadersNotUnique)
                 XCTAssertEqual("<th> values aren't unique.", error.localizedDescription)
-			}
-		)
-	}
-	
-	func test_error_tableDataRowspanNotInteger() throws {
-		
-		XCTAssertThrowsError(
-			try slab.convert(
+            }
+        )
+    }
+    
+    func test_error_tableDataRowspanNotInteger() throws {
+        
+        XCTAssertThrowsError(
+            try slab.convert(
 """
 <table>
-	<tbody>
-		<tr>
-			<th>A
-			</th>
-			<th>B
-			</th>
-		</tr>
-		<tr>
-			<td rowspan="a">1
-			</td>
-			<td>2
-			</td>
-		</tr>
-		<tr>
-			<td>4
-			</td>
-		</tr>
-	</tbody>
+ <tbody>
+  <tr>
+   <th>A
+   </th>
+   <th>B
+   </th>
+  </tr>
+  <tr>
+   <td rowspan="a">1
+   </td>
+   <td>2
+   </td>
+  </tr>
+  <tr>
+   <td>4
+   </td>
+  </tr>
+ </tbody>
 </table>
 """),
-			"",
-			{ error in
-				XCTAssertEqual(error as! SlabError, .tableDataRowspanNotInteger(tr: 0, td: 0, rowspan: "a"))
+            "",
+            { error in
+                XCTAssertEqual(error as! SlabError, .tableDataRowspanNotInteger(tr: 0, td: 0, rowspan: "a"))
                 XCTAssertEqual("Expected rolspan at (tr: 0, td: 0) to be an integer. Instead found 'a'.", error.localizedDescription)
-			}
-		)
-	}
-	
-	func test_error_tableDataColspanNotInteger() throws {
-		
-		XCTAssertThrowsError(
-			try slab.convert(
+            }
+        )
+    }
+    
+    func test_error_tableDataColspanNotInteger() throws {
+        
+        XCTAssertThrowsError(
+            try slab.convert(
 """
 <table>
-	<tbody>
-		<tr>
-			<th>A
-			</th>
-			<th>B
-			</th>
-		</tr>
-		<tr>
-			<td colspan="a">1
-			</td>
-		</tr>
-		<tr>
-			<td>3
-		    </td>
-			<td>4
-			</td>
-		</tr>
-	</tbody>
+ <tbody>
+  <tr>
+   <th>A
+   </th>
+   <th>B
+   </th>
+  </tr>
+  <tr>
+   <td colspan="a">1
+   </td>
+  </tr>
+  <tr>
+   <td>3
+      </td>
+   <td>4
+   </td>
+  </tr>
+ </tbody>
 </table>
 """),
-			"",
-			{ error in
-				XCTAssertEqual(error as! SlabError, .tableDataColspanNotInteger(tr: 0, td: 0, colspan: "a"))
+            "",
+            { error in
+                XCTAssertEqual(error as! SlabError, .tableDataColspanNotInteger(tr: 0, td: 0, colspan: "a"))
                 XCTAssertEqual("Expected colspan at (tr: 0, td: 0) to be an integer. Instead found 'a'.", error.localizedDescription)
-			}
-		)
-	}
+            }
+        )
+    }
     
     func test_error_missingTableData() {
         XCTAssertThrowsError(
@@ -185,45 +185,45 @@ final class SlabTests: XCTestCase {
             }
         )
     }
-	
-	func test_simple() throws {
-
-		XCTAssertEqual(
-			try slab.convert(
+    
+    func test_simple() throws {
+        
+        XCTAssertEqual(
+            try slab.convert(
 """
 <table>
-	<tbody>
-		<tr>
-			<th>A
-			</th>
-			<th>B
-			</th>
-		</tr>
-		<tr>
-			<td>1
-			</td>
-			<td>2
-			</td>
-		</tr>
-		<tr>
-		    <td>3
-			</td>
-			<td>4
-			</td>
-		</tr>
-	</tbody>
+ <tbody>
+  <tr>
+   <th>A
+   </th>
+   <th>B
+   </th>
+  </tr>
+  <tr>
+   <td>1
+   </td>
+   <td>2
+   </td>
+  </tr>
+  <tr>
+      <td>3
+   </td>
+   <td>4
+   </td>
+  </tr>
+ </tbody>
 </table>
 """
-			),
-			[
-				["A": "1", "B": "2"],
-				["A": "3", "B": "4"]
-			]
-		)
-	}
+            ),
+            [
+                ["A": "1", "B": "2"],
+                ["A": "3", "B": "4"]
+            ]
+        )
+    }
     
     func test_linebreaks_header() throws {
-    
+        
         XCTAssertEqual(
             try slab.convert(
 """
@@ -259,7 +259,7 @@ final class SlabTests: XCTestCase {
     }
     
     func test_linebreaks_rows() throws {
-    
+        
         XCTAssertEqual(
             try slab.convert(
 """
@@ -293,108 +293,108 @@ final class SlabTests: XCTestCase {
             ]
         )
     }
-	
+    
     func test_rowspan_1() throws {
-		
-		XCTAssertEqual(
-			try slab.convert(
+        
+        XCTAssertEqual(
+            try slab.convert(
 """
 <table>
-	<tbody>
-		<tr>
-			<th>A
-			</th>
-			<th>B
-			</th>
-		</tr>
-		<tr>
-			<td rowspan="2">1
-			</td>
-			<td>2
-			</td>
-		</tr>
-		<tr>
-			<td>4
-			</td>
-		</tr>
-	</tbody>
+ <tbody>
+  <tr>
+   <th>A
+   </th>
+   <th>B
+   </th>
+  </tr>
+  <tr>
+   <td rowspan="2">1
+   </td>
+   <td>2
+   </td>
+  </tr>
+  <tr>
+   <td>4
+   </td>
+  </tr>
+ </tbody>
 </table>
 """
-			),
-			[
-				["A": "1", "B": "2"],
-				["A": "1", "B": "4"]
-			]
-		)
-	}
-	
-	func test_rowspan_2() throws {
-		
-		XCTAssertEqual(
-			try slab.convert(
+            ),
+            [
+                ["A": "1", "B": "2"],
+                ["A": "1", "B": "4"]
+            ]
+        )
+    }
+    
+    func test_rowspan_2() throws {
+        
+        XCTAssertEqual(
+            try slab.convert(
 """
 <table>
-	<tbody>
-		<tr>
-			<th>A
-			</th>
-			<th>B
-			</th>
-		</tr>
-		<tr>
-			<td>1
-			</td>
-			<td rowspan="2">2
-			</td>
-		</tr>
-		<tr>
-			<td>4
-			</td>
-		</tr>
-	</tbody>
+ <tbody>
+  <tr>
+   <th>A
+   </th>
+   <th>B
+   </th>
+  </tr>
+  <tr>
+   <td>1
+   </td>
+   <td rowspan="2">2
+   </td>
+  </tr>
+  <tr>
+   <td>4
+   </td>
+  </tr>
+ </tbody>
 </table>
 """
-			),
-			[
-				["A": "1", "B": "2"],
-				["A": "4", "B": "2"]
-			]
-		)
-	}
-	
-	func test_colspan_1() throws {
-		
-		XCTAssertEqual(
-			try slab.convert(
+            ),
+            [
+                ["A": "1", "B": "2"],
+                ["A": "4", "B": "2"]
+            ]
+        )
+    }
+    
+    func test_colspan_1() throws {
+        
+        XCTAssertEqual(
+            try slab.convert(
 """
 <table>
-	<tbody>
-		<tr>
-			<th>A
-			</th>
-			<th>B
-			</th>
-		</tr>
-		<tr>
-			<td colspan="2">1
-			</td>
-		</tr>
-		<tr>
+ <tbody>
+  <tr>
+   <th>A
+   </th>
+   <th>B
+   </th>
+  </tr>
+  <tr>
+   <td colspan="2">1
+   </td>
+  </tr>
+  <tr>
             <td>3
             </td>
-			<td>4
-			</td>
-		</tr>
-	</tbody>
+   <td>4
+   </td>
+  </tr>
+ </tbody>
 </table>
 """
-			),
-			[
-				["A": "1", "B": "1"],
-				["A": "3", "B": "4"]
-			]
-		)
-	}
+            ),
+            [
+                ["A": "1", "B": "1"],
+                ["A": "3", "B": "4"]
+            ]
+        )
+    }
     
     func test_colspan_rowspan() throws {
         
